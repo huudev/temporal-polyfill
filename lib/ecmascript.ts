@@ -96,6 +96,7 @@ const BUILTIN_CALENDAR_IDS = [
   'ethiopic-amete-alem',
   'coptic',
   'chinese',
+  'vietnamese',
   'dangi',
   'roc',
   'indian',
