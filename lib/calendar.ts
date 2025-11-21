@@ -581,13 +581,13 @@ abstract class HelperBase {
         if (result.month < 1) {
           throw new RangeError(
             `Invalid month ${value} from ${isoString}[u-ca-${this.id}]` +
-              ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10527)'
+            ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10527)'
           );
         }
         if (result.month > 13) {
           throw new RangeError(
             `Invalid month ${value} from ${isoString}[u-ca-${this.id}]` +
-              ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10529)'
+            ' (probably due to https://bugs.chromium.org/p/v8/issues/detail?id=10529)'
           );
         }
 
@@ -1076,7 +1076,7 @@ abstract class HelperBase {
     // Note: relies on lexicographical ordering of monthCodes
     const calendarYear =
       calendarOfStartDateIso.monthCode > monthCode ||
-      (calendarOfStartDateIso.monthCode === monthCode && calendarOfStartDateIso.day >= day)
+        (calendarOfStartDateIso.monthCode === monthCode && calendarOfStartDateIso.day >= day)
         ? calendarOfStartDateIso.year
         : calendarOfStartDateIso.year - 1;
     for (let i = 0; i < 20; i++) {
@@ -1126,25 +1126,25 @@ abstract class HelperBase {
 interface HebrewMonthInfo {
   [m: string]: (
     | {
-        leap: undefined;
-        regular: number;
-      }
+      leap: undefined;
+      regular: number;
+    }
     | {
-        leap: number;
-        regular: undefined;
-      }
+      leap: number;
+      regular: undefined;
+    }
     | {
-        leap: number;
-        regular: number;
-      }
+      leap: number;
+      regular: number;
+    }
   ) & {
     monthCode: string;
     days:
-      | number
-      | {
-          min: number;
-          max: number;
-        };
+    | number
+    | {
+      min: number;
+      max: number;
+    };
   };
 }
 
@@ -1453,7 +1453,7 @@ class IndianHelper extends HelperBase {
     if (this.vulnerableToBceBug && isoDate.year < 1) {
       throw new RangeError(
         `calendar '${this.id}' is broken for ISO dates before 0001-01-01` +
-          ' (see https://bugs.chromium.org/p/v8/issues/detail?id=10529)'
+        ' (see https://bugs.chromium.org/p/v8/issues/detail?id=10529)'
       );
     }
   }
@@ -2611,9 +2611,15 @@ class VietnameseHelper extends HelperBase {
     const lunar = this.isoToVietnameseLunar(isoDate);
     const monthCode = buildMonthCode(lunar.month, lunar.leap);
 
+    // Get the monthIndex from getMonthList
+    // For lunisolar calendars, month property should be the ordinal position (1-13 for leap years)
+    const months = this.getMonthList(lunar.year, cache);
+    const monthKey = lunar.leap ? `${lunar.month}bis` : `${lunar.month}`;
+    const monthIndex = months[monthKey]?.monthIndex || lunar.month;
+
     const calendarDate: FullCalendarDate = {
       year: lunar.year,
-      month: lunar.month,
+      month: monthIndex,
       day: lunar.day,
       monthCode: monthCode
     };
