@@ -269,37 +269,37 @@ export namespace Temporal {
   export type RoundTo<T extends DateTimeUnit> =
     | SmallestUnit<T>
     | {
-        /**
-         * The unit to round to. For example, to round to the nearest minute,
-         * use `smallestUnit: 'minute'`. This option is required. Note that the
-         * same-named property is optional when passed to `until` or `since`
-         * methods, because those methods do no rounding by default.
-         */
-        smallestUnit: SmallestUnit<T>;
+      /**
+       * The unit to round to. For example, to round to the nearest minute,
+       * use `smallestUnit: 'minute'`. This option is required. Note that the
+       * same-named property is optional when passed to `until` or `since`
+       * methods, because those methods do no rounding by default.
+       */
+      smallestUnit: SmallestUnit<T>;
 
-        /**
-         * Allows rounding to an integer number of units. For example, to round to
-         * increments of a half hour, use `{ smallestUnit: 'minute',
-         * roundingIncrement: 30 }`.
-         */
-        roundingIncrement?: number;
+      /**
+       * Allows rounding to an integer number of units. For example, to round to
+       * increments of a half hour, use `{ smallestUnit: 'minute',
+       * roundingIncrement: 30 }`.
+       */
+      roundingIncrement?: number;
 
-        /**
-         * Controls how rounding is performed:
-         * - `halfExpand`: Round to the nearest of the values allowed by
-         *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
-         *   This mode is the default.
-         * - `ceil`: Always round up, towards the end of time.
-         * - `trunc`: Always round down, towards the beginning of time.
-         * - `floor`: Also round down, towards the beginning of time. This mode acts
-         *   the same as `trunc`, but it's included for consistency with
-         *   `Temporal.Duration.round()` where negative values are allowed and
-         *   `trunc` rounds towards zero, unlike `floor` which rounds towards
-         *   negative infinity which is usually unexpected. For this reason, `trunc`
-         *   is recommended for most use cases.
-         */
-        roundingMode?: RoundingMode;
-      };
+      /**
+       * Controls how rounding is performed:
+       * - `halfExpand`: Round to the nearest of the values allowed by
+       *   `roundingIncrement` and `smallestUnit`. When there is a tie, round up.
+       *   This mode is the default.
+       * - `ceil`: Always round up, towards the end of time.
+       * - `trunc`: Always round down, towards the beginning of time.
+       * - `floor`: Also round down, towards the beginning of time. This mode acts
+       *   the same as `trunc`, but it's included for consistency with
+       *   `Temporal.Duration.round()` where negative values are allowed and
+       *   `trunc` rounds towards zero, unlike `floor` which rounds towards
+       *   negative infinity which is usually unexpected. For this reason, `trunc`
+       *   is recommended for most use cases.
+       */
+      roundingMode?: RoundingMode;
+    };
 
   /**
    * The `round` method of the `Temporal.Duration` accepts one required
@@ -312,119 +312,119 @@ export namespace Temporal {
   export type DurationRoundTo =
     | SmallestUnit<DateTimeUnit>
     | ((
-        | {
-            /**
-             * The unit to round to. For example, to round to the nearest
-             * minute, use `smallestUnit: 'minute'`. This property is normally
-             * required, but is optional if `largestUnit` is provided and not
-             * undefined.
-             */
-            smallestUnit: SmallestUnit<DateTimeUnit>;
-
-            /**
-             * The largest unit to allow in the resulting `Temporal.Duration`
-             * object.
-             *
-             * Larger units will be "balanced" into smaller units. For example,
-             * if `largestUnit` is `'minute'` then a two-hour duration will be
-             * output as a 120-minute duration.
-             *
-             * Valid values include `'year'`, `'month'`, `'week'`, `'day'`,
-             * `'hour'`, `'minute'`, `'second'`, `'millisecond'`,
-             * `'microsecond'`, `'nanosecond'` and `'auto'`.
-             *
-             * The default is `'auto'`, which means "the largest nonzero unit in
-             * the input duration". This default prevents expanding durations to
-             * larger units unless the caller opts into this behavior.
-             *
-             * If `smallestUnit` is larger, then `smallestUnit` will be used as
-             * `largestUnit`, superseding a caller-supplied or default value.
-             */
-            largestUnit?: LargestUnit<DateTimeUnit>;
-          }
-        | {
-            /**
-             * The unit to round to. For example, to round to the nearest
-             * minute, use `smallestUnit: 'minute'`. This property is normally
-             * required, but is optional if `largestUnit` is provided and not
-             * undefined.
-             */
-            smallestUnit?: SmallestUnit<DateTimeUnit>;
-
-            /**
-             * The largest unit to allow in the resulting `Temporal.Duration`
-             * object.
-             *
-             * Larger units will be "balanced" into smaller units. For example,
-             * if `largestUnit` is `'minute'` then a two-hour duration will be
-             * output as a 120-minute duration.
-             *
-             * Valid values include `'year'`, `'month'`, `'week'`, `'day'`,
-             * `'hour'`, `'minute'`, `'second'`, `'millisecond'`,
-             * `'microsecond'`, `'nanosecond'` and `'auto'`.
-             *
-             * The default is `'auto'`, which means "the largest nonzero unit in
-             * the input duration". This default prevents expanding durations to
-             * larger units unless the caller opts into this behavior.
-             *
-             * If `smallestUnit` is larger, then `smallestUnit` will be used as
-             * `largestUnit`, superseding a caller-supplied or default value.
-             */
-            largestUnit: LargestUnit<DateTimeUnit>;
-          }
-      ) & {
+      | {
         /**
-         * Allows rounding to an integer number of units. For example, to round
-         * to increments of a half hour, use `{ smallestUnit: 'minute',
-         * roundingIncrement: 30 }`.
+         * The unit to round to. For example, to round to the nearest
+         * minute, use `smallestUnit: 'minute'`. This property is normally
+         * required, but is optional if `largestUnit` is provided and not
+         * undefined.
          */
-        roundingIncrement?: number;
+        smallestUnit: SmallestUnit<DateTimeUnit>;
 
         /**
-         * Controls how rounding is performed:
-         * - `halfExpand`: Round to the nearest of the values allowed by
-         *   `roundingIncrement` and `smallestUnit`. When there is a tie, round
-         *   away from zero like `ceil` for positive durations and like `floor`
-         *   for negative durations. This mode is the default.
-         * - `ceil`: Always round towards positive infinity. For negative
-         *   durations this option will decrease the absolute value of the
-         *   duration which may be unexpected. To round away from zero, use
-         *   `ceil` for positive durations and `floor` for negative durations.
-         * - `trunc`: Always round down towards zero.
-         * - `floor`: Always round towards negative infinity. This mode acts the
-         *   same as `trunc` for positive durations but for negative durations
-         *   it will increase the absolute value of the result which may be
-         *   unexpected. For this reason, `trunc` is recommended for most "round
-         *   down" use cases.
+         * The largest unit to allow in the resulting `Temporal.Duration`
+         * object.
+         *
+         * Larger units will be "balanced" into smaller units. For example,
+         * if `largestUnit` is `'minute'` then a two-hour duration will be
+         * output as a 120-minute duration.
+         *
+         * Valid values include `'year'`, `'month'`, `'week'`, `'day'`,
+         * `'hour'`, `'minute'`, `'second'`, `'millisecond'`,
+         * `'microsecond'`, `'nanosecond'` and `'auto'`.
+         *
+         * The default is `'auto'`, which means "the largest nonzero unit in
+         * the input duration". This default prevents expanding durations to
+         * larger units unless the caller opts into this behavior.
+         *
+         * If `smallestUnit` is larger, then `smallestUnit` will be used as
+         * `largestUnit`, superseding a caller-supplied or default value.
          */
-        roundingMode?: RoundingMode;
+        largestUnit?: LargestUnit<DateTimeUnit>;
+      }
+      | {
+        /**
+         * The unit to round to. For example, to round to the nearest
+         * minute, use `smallestUnit: 'minute'`. This property is normally
+         * required, but is optional if `largestUnit` is provided and not
+         * undefined.
+         */
+        smallestUnit?: SmallestUnit<DateTimeUnit>;
 
         /**
-         * The starting point to use for rounding and conversions when
-         * variable-length units (years, months, weeks depending on the
-         * calendar) are involved. This option is required if any of the
-         * following are true:
-         * - `unit` is `'week'` or larger units
-         * - `this` has a nonzero value for `weeks` or larger units
+         * The largest unit to allow in the resulting `Temporal.Duration`
+         * object.
          *
-         * This value must be either a `Temporal.PlainDateTime`, a
-         * `Temporal.ZonedDateTime`, or a string or object value that can be
-         * passed to `from()` of those types. Examples:
-         * - `'2020-01-01T00:00-08:00[America/Los_Angeles]'`
-         * - `'2020-01-01'`
-         * - `Temporal.PlainDate.from('2020-01-01')`
+         * Larger units will be "balanced" into smaller units. For example,
+         * if `largestUnit` is `'minute'` then a two-hour duration will be
+         * output as a 120-minute duration.
          *
-         * `Temporal.ZonedDateTime` will be tried first because it's more
-         * specific, with `Temporal.PlainDateTime` as a fallback.
+         * Valid values include `'year'`, `'month'`, `'week'`, `'day'`,
+         * `'hour'`, `'minute'`, `'second'`, `'millisecond'`,
+         * `'microsecond'`, `'nanosecond'` and `'auto'`.
          *
-         * If the value resolves to a `Temporal.ZonedDateTime`, then operation
-         * will adjust for DST and other time zone transitions. Otherwise
-         * (including if this option is omitted), then the operation will ignore
-         * time zone transitions and all days will be assumed to be 24 hours
-         * long.
+         * The default is `'auto'`, which means "the largest nonzero unit in
+         * the input duration". This default prevents expanding durations to
+         * larger units unless the caller opts into this behavior.
+         *
+         * If `smallestUnit` is larger, then `smallestUnit` will be used as
+         * `largestUnit`, superseding a caller-supplied or default value.
          */
-        relativeTo?: Temporal.PlainDateTime | Temporal.ZonedDateTime | PlainDateTimeLike | ZonedDateTimeLike | string;
-      });
+        largestUnit: LargestUnit<DateTimeUnit>;
+      }
+    ) & {
+      /**
+       * Allows rounding to an integer number of units. For example, to round
+       * to increments of a half hour, use `{ smallestUnit: 'minute',
+       * roundingIncrement: 30 }`.
+       */
+      roundingIncrement?: number;
+
+      /**
+       * Controls how rounding is performed:
+       * - `halfExpand`: Round to the nearest of the values allowed by
+       *   `roundingIncrement` and `smallestUnit`. When there is a tie, round
+       *   away from zero like `ceil` for positive durations and like `floor`
+       *   for negative durations. This mode is the default.
+       * - `ceil`: Always round towards positive infinity. For negative
+       *   durations this option will decrease the absolute value of the
+       *   duration which may be unexpected. To round away from zero, use
+       *   `ceil` for positive durations and `floor` for negative durations.
+       * - `trunc`: Always round down towards zero.
+       * - `floor`: Always round towards negative infinity. This mode acts the
+       *   same as `trunc` for positive durations but for negative durations
+       *   it will increase the absolute value of the result which may be
+       *   unexpected. For this reason, `trunc` is recommended for most "round
+       *   down" use cases.
+       */
+      roundingMode?: RoundingMode;
+
+      /**
+       * The starting point to use for rounding and conversions when
+       * variable-length units (years, months, weeks depending on the
+       * calendar) are involved. This option is required if any of the
+       * following are true:
+       * - `unit` is `'week'` or larger units
+       * - `this` has a nonzero value for `weeks` or larger units
+       *
+       * This value must be either a `Temporal.PlainDateTime`, a
+       * `Temporal.ZonedDateTime`, or a string or object value that can be
+       * passed to `from()` of those types. Examples:
+       * - `'2020-01-01T00:00-08:00[America/Los_Angeles]'`
+       * - `'2020-01-01'`
+       * - `Temporal.PlainDate.from('2020-01-01')`
+       *
+       * `Temporal.ZonedDateTime` will be tried first because it's more
+       * specific, with `Temporal.PlainDateTime` as a fallback.
+       *
+       * If the value resolves to a `Temporal.ZonedDateTime`, then operation
+       * will adjust for DST and other time zone transitions. Otherwise
+       * (including if this option is omitted), then the operation will ignore
+       * time zone transitions and all days will be assumed to be 24 hours
+       * long.
+       */
+      relativeTo?: Temporal.PlainDateTime | Temporal.ZonedDateTime | PlainDateTimeLike | ZonedDateTimeLike | string;
+    });
 
   /**
    * Options to control behavior of `Duration.prototype.total()`
@@ -432,35 +432,35 @@ export namespace Temporal {
   export type DurationTotalOf =
     | TotalUnit<DateTimeUnit>
     | {
-        /**
-         * The unit to convert the duration to. This option is required.
-         */
-        unit: TotalUnit<DateTimeUnit>;
+      /**
+       * The unit to convert the duration to. This option is required.
+       */
+      unit: TotalUnit<DateTimeUnit>;
 
-        /**
-         * The starting point to use when variable-length units (years, months,
-         * weeks depending on the calendar) are involved. This option is required if
-         * any of the following are true:
-         * - `unit` is `'week'` or larger units
-         * - `this` has a nonzero value for `weeks` or larger units
-         *
-         * This value must be either a `Temporal.PlainDateTime`, a
-         * `Temporal.ZonedDateTime`, or a string or object value that can be passed
-         * to `from()` of those types. Examples:
-         * - `'2020-01-01T00:00-08:00[America/Los_Angeles]'`
-         * - `'2020-01-01'`
-         * - `Temporal.PlainDate.from('2020-01-01')`
-         *
-         * `Temporal.ZonedDateTime` will be tried first because it's more
-         * specific, with `Temporal.PlainDateTime` as a fallback.
-         *
-         * If the value resolves to a `Temporal.ZonedDateTime`, then operation will
-         * adjust for DST and other time zone transitions. Otherwise (including if
-         * this option is omitted), then the operation will ignore time zone
-         * transitions and all days will be assumed to be 24 hours long.
-         */
-        relativeTo?: Temporal.ZonedDateTime | Temporal.PlainDateTime | ZonedDateTimeLike | PlainDateTimeLike | string;
-      };
+      /**
+       * The starting point to use when variable-length units (years, months,
+       * weeks depending on the calendar) are involved. This option is required if
+       * any of the following are true:
+       * - `unit` is `'week'` or larger units
+       * - `this` has a nonzero value for `weeks` or larger units
+       *
+       * This value must be either a `Temporal.PlainDateTime`, a
+       * `Temporal.ZonedDateTime`, or a string or object value that can be passed
+       * to `from()` of those types. Examples:
+       * - `'2020-01-01T00:00-08:00[America/Los_Angeles]'`
+       * - `'2020-01-01'`
+       * - `Temporal.PlainDate.from('2020-01-01')`
+       *
+       * `Temporal.ZonedDateTime` will be tried first because it's more
+       * specific, with `Temporal.PlainDateTime` as a fallback.
+       *
+       * If the value resolves to a `Temporal.ZonedDateTime`, then operation will
+       * adjust for DST and other time zone transitions. Otherwise (including if
+       * this option is omitted), then the operation will ignore time zone
+       * transitions and all days will be assumed to be 24 hours long.
+       */
+      relativeTo?: Temporal.ZonedDateTime | Temporal.PlainDateTime | ZonedDateTimeLike | PlainDateTimeLike | string;
+    };
 
   /**
    * Options to control behavior of `Duration.compare()`
@@ -679,9 +679,9 @@ export namespace Temporal {
       timeZoneAndTime:
         | string
         | {
-            timeZone: TimeZoneLike;
-            plainTime?: Temporal.PlainTime | PlainTimeLike | string;
-          }
+          timeZone: TimeZoneLike;
+          plainTime?: Temporal.PlainTime | PlainTimeLike | string;
+        }
     ): Temporal.ZonedDateTime;
     toPlainYearMonth(): Temporal.PlainYearMonth;
     toPlainMonthDay(): Temporal.PlainMonthDay;
@@ -1213,3 +1213,43 @@ declare namespace Intl {
 export { Intl as Intl };
 
 export function toTemporalInstant(this: Date): Temporal.Instant;
+
+/**
+ * Vietnamese Lunar Calendar Month Information
+ */
+export interface VietnameseMonthInfo {
+  [key: string]: {
+    monthIndex: number;
+    daysInMonth: number;
+  };
+}
+
+/**
+ * Get Vietnamese lunar month list for a given year
+ * 
+ * @param calendarYear - The Vietnamese lunar calendar year
+ * @returns Object mapping month keys (e.g., "1", "2bis", "3") to month info
+ * 
+ * @example
+ * ```typescript
+ * import { getVietnameseMonthList } from '@js-temporal/polyfill';
+ * 
+ * const months = getVietnameseMonthList(2024);
+ * console.log(months);
+ * // {
+ * //   "1": { monthIndex: 1, daysInMonth: 30 },
+ * //   "2": { monthIndex: 2, daysInMonth: 29 },
+ * //   ...
+ * // }
+ * 
+ * // Leap year example (2023 has leap month 2)
+ * const months2023 = getVietnameseMonthList(2023);
+ * // {
+ * //   "1": { monthIndex: 1, daysInMonth: 30 },
+ * //   "2": { monthIndex: 2, daysInMonth: 29 },
+ * //   "2bis": { monthIndex: 3, daysInMonth: 30 },  // Leap month
+ * //   ...
+ * // }
+ * ```
+ */
+export function getVietnameseMonthList(calendarYear: number): VietnameseMonthInfo;
