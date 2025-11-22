@@ -1,8 +1,6 @@
 import type { ISODate } from "./internaltypes";
 
-interface VietNameseMonthInfo {
-    [key: string]: { monthIndex: number; daysInMonth: number };
-}
+export type VietNameseMonthInfo = Map<string, { monthIndex: number; daysInMonth: number }>
 // Timezone offset for Vietnam (UTC+7)
 const VIETNAM_TZ_OFFSET = 7;
 const vietnameseMonthListCache = new Map<number, VietNameseMonthInfo>();
@@ -14,7 +12,7 @@ export function getVietnameseMonthList(calendarYear: number): VietNameseMonthInf
     const cached = vietnameseMonthListCache.get(calendarYear);
     if (cached) return cached;
 
-    const result: VietNameseMonthInfo = {};
+    const result: VietNameseMonthInfo = new Map();
 
     // Kiểm tra CẢ HAI khoảng để tìm tháng nhuận
     // 1. Từ tháng 11 năm (X-1) đến tháng 11 năm X (cho tháng 1-10)
@@ -97,10 +95,10 @@ export function getVietnameseMonthList(calendarYear: number): VietNameseMonthInf
             monthKey = `${currentLunarMonth}`;
         }
 
-        result[monthKey] = {
+        result.set(monthKey, {
             monthIndex,
             daysInMonth: daysInMonth
-        };
+        });
 
         monthIndex++;
 

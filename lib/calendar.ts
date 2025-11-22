@@ -14,7 +14,7 @@ import type {
   Overflow,
   Resolve
 } from './internaltypes';
-import { getVietnameseMonthList, isoToVietnameseLunar, vietnameseLunarToIso } from './vietnamese';
+import { getVietnameseMonthList, isoToVietnameseLunar, vietnameseLunarToIso, type VietNameseMonthInfo } from './vietnamese';
 
 function arrayFromSet<T>(src: Set<T>): T[] {
   return [...src];
@@ -2274,7 +2274,7 @@ class VietnameseHelper extends HelperBase {
     throw new RangeError('Vietnamese lunar calendar does not use Intl.DateTimeFormat');
   }
 
-  getMonthList(calendarYear: number, _: OneObjectCache): ChineseMonthInfo {
+  getMonthList(calendarYear: number, _: OneObjectCache): VietNameseMonthInfo {
     return getVietnameseMonthList(calendarYear);
   }
 
@@ -2291,7 +2291,7 @@ class VietnameseHelper extends HelperBase {
     // For lunisolar calendars, month property should be the ordinal position (1-13 for leap years)
     const months = this.getMonthList(lunar.year, cache);
     const monthKey = lunar.leap ? `${lunar.month}bis` : `${lunar.month}`;
-    const monthIndex = months[monthKey]?.monthIndex || lunar.month;
+    const monthIndex = months.get(monthKey)?.monthIndex || lunar.month;
 
     const calendarDate: FullCalendarDate = {
       year: lunar.year,
@@ -2324,12 +2324,12 @@ class VietnameseHelper extends HelperBase {
       let numberPart = monthCode.replace(/^M0?|L$/g, '');
       const monthKey = isLeap ? `${numberPart}bis` : numberPart;
 
-      const monthInfo = months[monthKey];
+      const monthInfo = months.get(monthKey);
 
       if (monthInfo === undefined) {
         if (overflow === 'constrain' && isLeap) {
           // Try non-leap month
-          const nonLeapInfo = months[numberPart];
+          const nonLeapInfo = months.get(numberPart);
           if (nonLeapInfo) {
             month = nonLeapInfo.monthIndex;
             monthCode = buildMonthCode(+numberPart, false);
