@@ -8,7 +8,8 @@
 import * as Temporal from './temporal';
 import * as Intl from './intl';
 import { toTemporalInstant } from './legacydate';
-import { getVietnameseMonthList } from './vietnamese';
+import { getVietnameseMonthMap } from './vietnamese';
+import { buildMonthCode } from './calendar'
 
 // Work around https://github.com/babel/babel/issues/2025.
 const types = [
@@ -36,5 +37,6 @@ export {
   Temporal,
   Intl,
   toTemporalInstant,
-  getVietnameseMonthList
+  getVietnameseMonthMap,
+  buildMonthCode
 };

@@ -14,7 +14,7 @@ import type {
   Overflow,
   Resolve
 } from './internaltypes';
-import { getVietnameseMonthList, isoToVietnameseLunar, vietnameseLunarToIso, type VietNameseMonthInfo } from './vietnamese';
+import { getVietnameseMonthMap, isoToVietnameseLunar, vietnameseLunarToIso, type VietNameseMonthInfo } from './vietnamese';
 
 function arrayFromSet<T>(src: Set<T>): T[] {
   return [...src];
@@ -351,7 +351,7 @@ function nonLeapMonthCodeNumberPart(monthCode: string) {
   return month;
 }
 
-function buildMonthCode(month: number, leap = false) {
+export function buildMonthCode(month: number, leap = false) {
   const digitPart = `${month}`.padStart(2, '0');
   const leapMarker = leap ? 'L' : '';
   return `M${digitPart}${leapMarker}`;
@@ -2250,8 +2250,7 @@ class VietnameseHelper extends HelperBase {
   calendarType = 'lunisolar' as const;
 
   inLeapYear(calendarDate: CalendarYearOnly, cache: OneObjectCache) {
-    const months = this.getMonthList(calendarDate.year, cache);
-    return Object.entries(months).length === 13;
+    return this.getMonthList(calendarDate.year, cache).size === 13;
   }
 
   monthsInYear(calendarDate: CalendarYearOnly, cache: OneObjectCache) {
@@ -2275,7 +2274,7 @@ class VietnameseHelper extends HelperBase {
   }
 
   getMonthList(calendarYear: number, _: OneObjectCache): VietNameseMonthInfo {
-    return getVietnameseMonthList(calendarYear);
+    return getVietnameseMonthMap(calendarYear);
   }
 
   override isoToCalendarDate(isoDate: ISODate, cache: OneObjectCache): FullCalendarDate {
@@ -2290,8 +2289,11 @@ class VietnameseHelper extends HelperBase {
     // Get the monthIndex from getMonthList
     // For lunisolar calendars, month property should be the ordinal position (1-13 for leap years)
     const months = this.getMonthList(lunar.year, cache);
-    const monthKey = lunar.leap ? `${lunar.month}bis` : `${lunar.month}`;
-    const monthIndex = months.get(monthKey)?.monthIndex || lunar.month;
+    const monthInfo = months.get(monthCode);
+    if (!monthInfo) {
+      throw new RangeError(`Không tìm thấy tháng ${monthCode} trong năm âm lịch ${lunar.year}`);
+    }
+    const monthIndex = monthInfo.monthIndex;
 
     const calendarDate: FullCalendarDate = {
       year: lunar.year,
@@ -2322,17 +2324,16 @@ class VietnameseHelper extends HelperBase {
       const months = this.getMonthList(year, cache);
       const isLeap = monthCode.endsWith('L');
       let numberPart = monthCode.replace(/^M0?|L$/g, '');
-      const monthKey = isLeap ? `${numberPart}bis` : numberPart;
 
-      const monthInfo = months.get(monthKey);
+      const monthInfo = months.get(monthCode);
 
       if (monthInfo === undefined) {
         if (overflow === 'constrain' && isLeap) {
           // Try non-leap month
-          const nonLeapInfo = months.get(numberPart);
+          monthCode = buildMonthCode(+numberPart);
+          const nonLeapInfo = months.get(monthCode);
           if (nonLeapInfo) {
             month = nonLeapInfo.monthIndex;
-            monthCode = buildMonthCode(+numberPart, false);
           } else {
             throw new RangeError(`Không tìm thấy tháng ${monthCode} trong năm âm lịch ${year}`);
           }
@@ -2344,8 +2345,7 @@ class VietnameseHelper extends HelperBase {
       }
     } else {
       const months = this.getMonthList(year, cache);
-      const monthEntries = Object.entries(months);
-      const largestMonth = monthEntries.length;
+      const largestMonth = months.size;
 
       if (overflow === 'reject') {
         ES.RejectToRange(month, 1, largestMonth);
@@ -2353,12 +2353,18 @@ class VietnameseHelper extends HelperBase {
         month = ES.ConstrainToRange(month, 1, largestMonth);
       }
 
-      const matchingMonthEntry = monthEntries.find((entry) => entry[1].monthIndex === month);
-      if (!matchingMonthEntry) {
+      let matchingMonthCode: string | undefined;
+      for (const [code, info] of months.entries()) {
+        if (info.monthIndex === month) {
+          matchingMonthCode = code;
+          break;
+        }
+      }
+      if (!matchingMonthCode) {
         throw new RangeError(`Tháng ${month} không hợp lệ trong năm âm lịch ${year}`);
       }
 
-      monthCode = buildMonthCode(+matchingMonthEntry[0].replace('bis', ''), matchingMonthEntry[0].includes('bis'));
+      monthCode = matchingMonthCode;
     }
 
     if (overflow === 'reject') {

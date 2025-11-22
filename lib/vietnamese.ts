@@ -1,10 +1,11 @@
+import { buildMonthCode } from "./calendar";
 import type { ISODate } from "./internaltypes";
 
 export type VietNameseMonthInfo = Map<string, { monthIndex: number; daysInMonth: number }>
 // Timezone offset for Vietnam (UTC+7)
 const VIETNAM_TZ_OFFSET = 7;
 const vietnameseMonthListCache = new Map<number, VietNameseMonthInfo>();
-export function getVietnameseMonthList(calendarYear: number): VietNameseMonthInfo {
+export function getVietnameseMonthMap(calendarYear: number): VietNameseMonthInfo {
     if (calendarYear === undefined) {
         throw new TypeError('Thiếu năm (Missing year)');
     }
@@ -90,9 +91,9 @@ export function getVietnameseMonthList(calendarYear: number): VietNameseMonthInf
 
         let monthKey: string;
         if (isThisLeapMonth) {
-            monthKey = `${currentLunarMonth}bis`;
+            monthKey = buildMonthCode(currentLunarMonth, true);
         } else {
-            monthKey = `${currentLunarMonth}`;
+            monthKey = buildMonthCode(currentLunarMonth);
         }
 
         result.set(monthKey, {

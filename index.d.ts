@@ -1230,9 +1230,9 @@ export type VietnameseMonthInfo = Map<string, {
  * 
  * @example
  * ```typescript
- * import { getVietnameseMonthList } from '@js-temporal/polyfill';
+ * import { getVietnameseMonthMap } from '@js-temporal/polyfill';
  * 
- * const months = getVietnameseMonthList(2024);
+ * const months = getVietnameseMonthMap(2024);
  * console.log(months);
  * // {
  * //   "1": { monthIndex: 1, daysInMonth: 30 },
@@ -1241,7 +1241,7 @@ export type VietnameseMonthInfo = Map<string, {
  * // }
  * 
  * // Leap year example (2023 has leap month 2)
- * const months2023 = getVietnameseMonthList(2023);
+ * const months2023 = getVietnameseMonthMap(2023);
  * // {
  * //   "1": { monthIndex: 1, daysInMonth: 30 },
  * //   "2": { monthIndex: 2, daysInMonth: 29 },
@@ -1250,4 +1250,6 @@ export type VietnameseMonthInfo = Map<string, {
  * // }
  * ```
  */
-export function getVietnameseMonthList(calendarYear: number): VietnameseMonthInfo;
+export function getVietnameseMonthMap(calendarYear: number): VietnameseMonthInfo;
+
+export function buildMonthCode(month: number, leap?: boolean): string;
