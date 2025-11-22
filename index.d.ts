@@ -1217,12 +1217,10 @@ export function toTemporalInstant(this: Date): Temporal.Instant;
 /**
  * Vietnamese Lunar Calendar Month Information
  */
-export interface VietnameseMonthInfo {
-  [key: string]: {
-    monthIndex: number;
-    daysInMonth: number;
-  };
-}
+export type VietnameseMonthInfo = Map<string, {
+  monthIndex: number;
+  daysInMonth: number;
+}>;
 
 /**
  * Get Vietnamese lunar month list for a given year
